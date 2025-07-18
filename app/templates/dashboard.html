@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - BrainCare System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <h3><i class="fas fa-tachometer-alt"></i> Welcome back, {{ current_user.get_full_name() }}!</h3>
+                <p class="mb-0">{{ current_user.user_type.title() }} Dashboard</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    {% if current_user.user_type == 'patient' %}
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <h3>{{ user_stats.detections }}</h3>
+            <p><i class="fas fa-search"></i> Brain Scans</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #27ae60, #229954);">
+            <h3>{{ user_stats.appointments }}</h3>
+            <p><i class="fas fa-calendar"></i> Appointments</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+            <h3>{{ user_stats.support_requests }}</h3>
+            <p><i class="fas fa-hands-helping"></i> Support Requests</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+            <h3>0</h3>
+            <p><i class="fas fa-bell"></i> Notifications</p>
+        </div>
+    </div>
+    
+    {% elif current_user.user_type == 'donor' %}
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <h3>{{ user_stats.appointments }}</h3>
+            <p><i class="fas fa-calendar"></i> Appointments</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #27ae60, #229954);">
+            <h3>{{ user_stats.support_responses }}</h3>
+            <p><i class="fas fa-reply"></i> Support Responses</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+            <h3>0</h3>
+            <p><i class="fas fa-heart"></i> Patients Helped</p>
+        </div>
+    </div>
+    
+    {% elif current_user.user_type == 'doctor' %}
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <h3>{{ user_stats.appointments }}</h3>
+            <p><i class="fas fa-calendar"></i> Appointments</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #27ae60, #229954);">
+            <h3>{{ user_stats.patients }}</h3>
+            <p><i class="fas fa-users"></i> Total Patients</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+            <h3>0</h3>
+            <p><i class="fas fa-stethoscope"></i> Consultations</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-md-4 mb-4">
+        <div class="sidebar">
+            <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            
+            {% if current_user.user_type == 'patient' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('detection.upload') }}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload Brain Scan
+                </a>
+                <a href="{{ url_for('support.new_request') }}" class="btn btn-warning">
+                    <i class="fas fa-hands-helping"></i> Request Support
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                </a>
+                <a href="{{ url_for('support.donors') }}" class="btn btn-info">
+                    <i class="fas fa-search"></i> Find Donors
+                </a>
+            </div>
+            
+            {% elif current_user.user_type == 'donor' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('support.requests') }}" class="btn btn-primary">
+                    <i class="fas fa-hands-helping"></i> View Support Requests
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Meeting
+                </a>
+                <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                    <i class="fas fa-envelope"></i> Send Message
+                </a>
+            </div>
+            
+            {% elif current_user.user_type == 'doctor' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('detection.statistics') }}" class="btn btn-primary">
+                    <i class="fas fa-chart-bar"></i> View Statistics
+                </a>
+                <a href="{{ url_for('support.requests') }}" class="btn btn-warning">
+                    <i class="fas fa-hands-helping"></i> Support Requests
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                </a>
+                <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                    <i class="fas fa-envelope"></i> Send Message
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="col-md-8 mb-4">
+        <div class="main-content">
+            <h5><i class="fas fa-clock"></i> Recent Activity</h5>
+            
+            {% if current_user.user_type == 'patient' or current_user.user_type == 'doctor' %}
+            <!-- Recent Detections -->
+            {% if recent_detections %}
+            <h6 class="mt-4"><i class="fas fa-brain"></i> Recent Brain Scans</h6>
+            {% for detection in recent_detections %}
+            <div class="detection-result {{ detection.prediction_result }}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>
+                            {% if detection.prediction_result == 'positive' %}
+                            <i class="fas fa-exclamation-triangle text-warning"></i> Tumor Detected
+                            {% else %}
+                            <i class="fas fa-check-circle text-success"></i> No Tumor
+                            {% endif %}
+                        </strong>
+                        {% if detection.tumor_type %}
+                        <span class="badge bg-info ms-2">{{ detection.tumor_type }}</span>
+                        {% endif %}
+                        {% if detection.confidence_score %}
+                        <span class="badge bg-secondary ms-1">{{ detection.confidence_score }}% confidence</span>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted">{{ detection.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                {% if detection.notes %}
+                <p class="mt-2 mb-0 text-muted">{{ detection.notes }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="text-center mt-3">
+                <a href="{{ url_for('detection.history') }}" class="btn btn-outline-primary btn-sm">
+                    View All Scans
+                </a>
+            </div>
+            {% endif %}
+            {% endif %}
+            
+            <!-- Recent Appointments -->
+            {% if recent_appointments %}
+            <h6 class="mt-4"><i class="fas fa-calendar"></i> Recent Appointments</h6>
+            {% for appointment in recent_appointments %}
+            <div class="appointment-card {{ appointment.status }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ appointment.appointment_type.title() }}</strong>
+                            <span class="badge bg-{{ 'warning' if appointment.status == 'pending' else 'success' if appointment.status == 'confirmed' else 'secondary' }} ms-2">
+                                {{ appointment.status.title() }}
+                            </span>
+                        </div>
+                        <small class="text-muted">{{ appointment.appointment_date.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    {% if appointment.notes %}
+                    <p class="mt-2 mb-0 text-muted">{{ appointment.notes }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="text-center mt-3">
+                <a href="{{ url_for('support.appointments') }}" class="btn btn-outline-primary btn-sm">
+                    View All Appointments
+                </a>
+            </div>
+            {% endif %}
+            
+            <!-- No Activity Message -->
+            {% if not recent_detections and not recent_appointments %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No recent activity to display.</p>
+                {% if current_user.user_type == 'patient' %}
+                <a href="{{ url_for('detection.upload') }}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload Your First Brain Scan
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- System Status -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <i class="fas fa-server fa-2x text-success mb-2"></i>
+                        <p class="mb-0"><strong>System Status</strong><br><span class="text-success">Online</span></p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-brain fa-2x text-primary mb-2"></i>
+                        <p class="mb-0"><strong>AI Model</strong><br><span class="text-primary">85% Accuracy</span></p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+                        <p class="mb-0"><strong>Security</strong><br><span class="text-info">HIPAA Compliant</span></p>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                        <p class="mb-0"><strong>Response Time</strong><br><span class="text-warning">< 30 seconds</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-refresh dashboard every 5 minutes
+    setTimeout(function() {
+        location.reload();
+    }, 300000);
+    
+    // Animate statistics on load
+    window.addEventListener('load', function() {
+        const statsCards = document.querySelectorAll('.stats-card h3');
+        statsCards.forEach(card => {
+            const finalValue = parseInt(card.textContent);
+            let currentValue = 0;
+            const increment = finalValue / 30;
+            
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    card.textContent = finalValue;
+                    clearInterval(timer);
+                } else {
+                    card.textContent = Math.floor(currentValue);
+                }
+            }, 50);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Support System - BrainCare System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card" style="background: linear-gradient(135deg, #27ae60, #229954); color: white;">
+            <div class="card-body">
+                <h3><i class="fas fa-hands-helping"></i> Patient Support System</h3>
+                <p class="mb-0">Connecting patients, donors, and healthcare professionals for comprehensive support</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions Sidebar -->
+    <div class="col-md-3 mb-4">
+        <div class="sidebar">
+            <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            
+            {% if current_user.user_type == 'patient' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('support.new_request') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Support Request
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                </a>
+                <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                    <i class="fas fa-envelope"></i> Send Message
+                </a>
+                <a href="{{ url_for('support.donors') }}" class="btn btn-warning">
+                    <i class="fas fa-search"></i> Find Donors
+                </a>
+            </div>
+            
+            {% elif current_user.user_type == 'donor' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('support.requests') }}" class="btn btn-primary">
+                    <i class="fas fa-hands-helping"></i> View Requests
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Meeting
+                </a>
+                <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                    <i class="fas fa-envelope"></i> Contact Patient
+                </a>
+            </div>
+            
+            {% elif current_user.user_type == 'doctor' %}
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('support.requests') }}" class="btn btn-primary">
+                    <i class="fas fa-stethoscope"></i> Medical Requests
+                </a>
+                <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Schedule Consultation
+                </a>
+                <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                    <i class="fas fa-envelope"></i> Contact Patient
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="sidebar mt-3">
+            <h6><i class="fas fa-list"></i> Navigation</h6>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('support.requests') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-hands-helping"></i> Support Requests
+                </a>
+                <a href="{{ url_for('support.appointments') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar"></i> Appointments
+                </a>
+                <a href="{{ url_for('support.messages') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-envelope"></i> Messages
+                    <span id="unread-count" class="badge bg-danger ms-2" style="display: none;"></span>
+                </a>
+                {% if current_user.user_type != 'donor' %}
+                <a href="{{ url_for('support.donors') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-heart"></i> Donors
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <div class="main-content">
+            <!-- Support Requests Section -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-hands-helping"></i> 
+                        {% if current_user.user_type == 'patient' %}Your Support Requests{% else %}Recent Support Requests{% endif %}
+                    </h5>
+                    {% if current_user.user_type == 'patient' %}
+                    <a href="{{ url_for('support.new_request') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> New Request
+                    </a>
+                    {% endif %}
+                </div>
+                
+                {% if support_requests %}
+                {% for request in support_requests %}
+                <div class="support-request-card {{ request.urgency }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="card-title">
+                                    <a href="{{ url_for('support.view_request', request_id=request.id) }}" class="text-decoration-none">
+                                        {{ request.title }}
+                                    </a>
+                                </h6>
+                                <p class="card-text text-muted">{{ request.description[:100] }}{% if request.description|length > 100 %}...{% endif %}</p>
+                                <div>
+                                    <span class="badge bg-primary">{{ request.support_type.title() }}</span>
+                                    <span class="badge bg-{{ 'danger' if request.urgency == 'urgent' else 'warning' if request.urgency == 'high' else 'info' }}">
+                                        {{ request.urgency.title() }}
+                                    </span>
+                                    <span class="badge bg-{{ 'success' if request.status == 'resolved' else 'warning' if request.status == 'in_progress' else 'secondary' }}">
+                                        {{ request.status.replace('_', ' ').title() }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">{{ request.created_at.strftime('%Y-%m-%d') }}</small>
+                                {% if current_user.user_type != 'patient' %}
+                                <br><small class="text-muted">by {{ request.patient.get_full_name() }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('support.requests') }}" class="btn btn-outline-primary">
+                        View All Requests
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-hands-helping fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No support requests found.</p>
+                    {% if current_user.user_type == 'patient' %}
+                    <a href="{{ url_for('support.new_request') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Your First Request
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Appointments Section -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-calendar"></i> Upcoming Appointments</h5>
+                    <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-calendar-plus"></i> Schedule
+                    </a>
+                </div>
+                
+                {% if appointments %}
+                {% for appointment in appointments %}
+                <div class="appointment-card {{ appointment.status }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">{{ appointment.appointment_type.title() }}</h6>
+                                <p class="card-text">
+                                    <i class="fas fa-calendar"></i> {{ appointment.appointment_date.strftime('%Y-%m-%d %H:%M') }}
+                                </p>
+                                {% if appointment.notes %}
+                                <p class="card-text text-muted">{{ appointment.notes[:100] }}{% if appointment.notes|length > 100 %}...{% endif %}</p>
+                                {% endif %}
+                                <span class="badge bg-{{ 'warning' if appointment.status == 'pending' else 'success' if appointment.status == 'confirmed' else 'secondary' }}">
+                                    {{ appointment.status.title() }}
+                                </span>
+                            </div>
+                            <div class="text-end">
+                                <a href="{{ url_for('support.view_appointment', appointment_id=appointment.id) }}" class="btn btn-outline-primary btn-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('support.appointments') }}" class="btn btn-outline-primary">
+                        View All Appointments
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No appointments scheduled.</p>
+                    <a href="{{ url_for('support.new_appointment') }}" class="btn btn-success">
+                        <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Messages Section -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-envelope"></i> Recent Messages</h5>
+                    <a href="{{ url_for('support.new_message') }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-plus"></i> New Message
+                    </a>
+                </div>
+                
+                {% if messages %}
+                {% for message in messages %}
+                <div class="message-card {% if not message.is_read %}unread{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="card-title">
+                                    <a href="{{ url_for('support.view_message', message_id=message.id) }}" class="text-decoration-none">
+                                        {{ message.subject }}
+                                    </a>
+                                    {% if not message.is_read %}
+                                    <span class="badge bg-warning ms-2">New</span>
+                                    {% endif %}
+                                </h6>
+                                <p class="card-text text-muted">From: {{ message.sender.get_full_name() }}</p>
+                                <p class="card-text">{{ message.body[:100] }}{% if message.body|length > 100 %}...{% endif %}</p>
+                            </div>
+                            <small class="text-muted">{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('support.messages') }}" class="btn btn-outline-primary">
+                        View All Messages
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No messages found.</p>
+                    <a href="{{ url_for('support.new_message') }}" class="btn btn-info">
+                        <i class="fas fa-plus"></i> Send Message
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

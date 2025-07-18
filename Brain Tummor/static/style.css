@@ -1,0 +1,105 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f4aa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    background-color: rgb(207, 155, 155);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h3 {
+    font-size: 24px;
+    margin-top: 20px;
+    color: #333;
+}
+
+input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:active {
+    background-color: #3e8e41;
+}
+
+.result {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #790808;
+    background-color: #ccc;
+}
+
+img {
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 20px;
+}
+
+button#descriptionBtn {
+    background-color: #2196F3;
+}
+
+button#descriptionBtn:hover {
+    background-color: #1976D2;
+}
+
+button#descriptionBtn:active {
+    background-color: #7825e9;
+    color: #333;
+}
+
+/* Ensuring the layout is responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    input[type="file"], button {
+        width: 100%;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Detection History{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Detection History</h2>
+    {% if detections %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Image</th>
+                <th>Result</th>
+                <th>Tumor Type</th>
+                <th>Tumor Name</th>
+                <th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detection in detections %}
+            <tr>
+                <td>{{ detection.timestamp.strftime('%Y-%m-%d %H:%M') if detection.timestamp else '' }}</td>
+                <td>{{ detection.image_filename }}</td>
+                <td>{{ detection.prediction_result }}</td>
+                <td>{{ detection.tumor_type }}</td>
+                <td>{{ detection.tumor_name }}</td>
+                <td>{{ detection.confidence_score }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No detection history found.</p>
+    {% endif %}
+</div>
+{% endblock %}

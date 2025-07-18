@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Brain Tumor Detection & Patient Support System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body text-center py-5">
+                <h1 class="display-4 mb-4">
+                    <i class="fas fa-brain"></i> BrainCare System
+                </h1>
+                <p class="lead mb-4">
+                    Advanced AI-powered brain tumor detection with comprehensive patient support system
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <p class="mb-4">
+                            Our system combines cutting-edge CNN and KNN machine learning algorithms to provide accurate brain tumor detection, 
+                            while connecting patients with donors and healthcare professionals for comprehensive support.
+                        </p>
+                    </div>
+                </div>
+                {% if not current_user.is_authenticated %}
+                <div class="mt-4">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+                {% else %}
+                <div class="mt-4">
+                    <a href="{{ url_for('detection.upload') }}" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-upload"></i> Upload Brain Scan
+                    </a>
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">System Statistics</h2>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <h3>{{ stats.total_users }}</h3>
+            <p><i class="fas fa-users"></i> Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #27ae60, #229954);">
+            <h3>{{ stats.total_detections }}</h3>
+            <p><i class="fas fa-search"></i> Scans Analyzed</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+            <h3>{{ stats.total_appointments }}</h3>
+            <p><i class="fas fa-calendar"></i> Appointments</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+            <h3>{{ stats.total_support_requests }}</h3>
+            <p><i class="fas fa-hands-helping"></i> Support Requests</p>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Key Features</h2>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-brain fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">AI-Powered Detection</h5>
+                <p class="card-text">
+                    Advanced CNN and KNN algorithms for accurate brain tumor detection and classification. 
+                    Our system achieves 85% accuracy in tumor identification.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-hands-helping fa-3x text-success"></i>
+                </div>
+                <h5 class="card-title">Patient Support System</h5>
+                <p class="card-text">
+                    Connect with donors, healthcare professionals, and support groups. 
+                    Get emotional, financial, and medical support when you need it most.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-calendar-check fa-3x text-warning"></i>
+                </div>
+                <h5 class="card-title">Appointment Scheduling</h5>
+                <p class="card-text">
+                    Easy appointment scheduling with doctors and donors. 
+                    Manage your healthcare journey with integrated calendar system.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <span class="badge bg-primary rounded-pill me-2">1</span>
+                    Upload Brain Scan
+                </h5>
+                <p class="card-text">
+                    Upload your MRI brain scan image. Our system supports various formats including JPEG, PNG, and TIFF.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <span class="badge bg-primary rounded-pill me-2">2</span>
+                    AI Analysis
+                </h5>
+                <p class="card-text">
+                    Our CNN model analyzes the image for tumor presence, while KNN classifier determines the tumor type.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <span class="badge bg-primary rounded-pill me-2">3</span>
+                    Get Results
+                </h5>
+                <p class="card-text">
+                    Receive detailed analysis results including tumor type, confidence score, and recommendations.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <span class="badge bg-primary rounded-pill me-2">4</span>
+                    Get Support
+                </h5>
+                <p class="card-text">
+                    Connect with our support network for medical advice, emotional support, and financial assistance.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if current_user.is_authenticated %}
+<!-- Recent Activity Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Your Recent Activity</h2>
+    </div>
+    {% if recent_activity %}
+    <div class="col-12">
+        {% for activity in recent_activity %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-{{ 'search' if activity.type == 'detection' else 'calendar' }} text-primary me-2"></i>
+                        {{ activity.message }}
+                    </div>
+                    <small class="text-muted">{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <p class="text-muted">No recent activity. Start by uploading a brain scan for analysis.</p>
+                <a href="{{ url_for('detection.upload') }}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload Brain Scan
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Call to Action Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="background: linear-gradient(135deg, #2c3e50, #34495e); color: white;">
+            <div class="card-body text-center py-5">
+                <h3 class="mb-4">Ready to Get Started?</h3>
+                <p class="lead mb-4">
+                    Join thousands of users who trust our AI-powered brain tumor detection system
+                </p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </a>
+                {% else %}
+                <a href="{{ url_for('detection.upload') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-upload"></i> Upload Brain Scan
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate statistics on scroll
+    function animateStats() {
+        const statsCards = document.querySelectorAll('.stats-card h3');
+        statsCards.forEach(card => {
+            const finalValue = parseInt(card.textContent);
+            let currentValue = 0;
+            const increment = finalValue / 50;
+            
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    card.textContent = finalValue;
+                    clearInterval(timer);
+                } else {
+                    card.textContent = Math.floor(currentValue);
+                }
+            }, 30);
+        });
+    }
+    
+    // Trigger animation when page loads
+    window.addEventListener('load', animateStats);
+</script>
+{% endblock %}

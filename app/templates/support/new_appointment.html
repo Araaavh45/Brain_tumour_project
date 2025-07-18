@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Appointment - BrainCare System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="main-content">
+            <div class="text-center mb-4">
+                <h2><i class="fas fa-calendar-plus text-success"></i> Schedule Appointment</h2>
+                <p class="text-muted">Book an appointment with healthcare professionals or donors</p>
+            </div>
+            
+            <form method="POST">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="appointment_type" class="form-label">Appointment Type *</label>
+                            <select class="form-select" id="appointment_type" name="appointment_type" required>
+                                <option value="">Select appointment type</option>
+                                <option value="consultation">Medical Consultation</option>
+                                <option value="support">Support Meeting</option>
+                                <option value="treatment">Treatment Discussion</option>
+                                <option value="follow_up">Follow-up</option>
+                                <option value="counseling">Counseling Session</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="appointment_date" class="form-label">Date & Time *</label>
+                            <input type="datetime-local" class="form-control" id="appointment_date" name="appointment_date" required>
+                        </div>
+                        
+                        {% if current_user.user_type != 'patient' %}
+                        <div class="mb-3">
+                            <label for="patient_id" class="form-label">Patient *</label>
+                            <select class="form-select" id="patient_id" name="patient_id" required>
+                                <option value="">Select patient</option>
+                                {% for patient in patients %}
+                                <option value="{{ patient.id }}">{{ patient.get_full_name() }} ({{ patient.email }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        {% if current_user.user_type != 'doctor' %}
+                        <div class="mb-3">
+                            <label for="doctor_id" class="form-label">Doctor (Optional)</label>
+                            <select class="form-select" id="doctor_id" name="doctor_id">
+                                <option value="">Select doctor</option>
+                                {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}">{{ doctor.get_full_name() }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                        
+                        {% if current_user.user_type != 'donor' %}
+                        <div class="mb-3">
+                            <label for="donor_id" class="form-label">Donor (Optional)</label>
+                            <select class="form-select" id="donor_id" name="donor_id">
+                                <option value="">Select donor</option>
+                                {% for donor in donors %}
+                                <option value="{{ donor.id }}">{{ donor.get_full_name() }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                      placeholder="Additional information about the appointment..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg me-2">
+                        <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                    </button>
+                    <a href="{{ url_for('support.appointments') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Appointments
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set minimum date to today
+    document.getElementById('appointment_date').min = new Date().toISOString().slice(0, 16);
+</script>
+{% endblock %}

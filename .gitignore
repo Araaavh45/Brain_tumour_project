@@ -1,0 +1,28 @@
+# Python cache and temp files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model and data files
+*.h5
+*.pkl
+*.keras
+*.7z
+
+# Jupyter and notebook checkpoints
+.ipynb_checkpoints/
+
+# Instance and uploads
+instance/uploads/
+
+# Large datasets (customize as needed)
+data/datasets/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.venv/
